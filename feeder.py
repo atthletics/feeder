@@ -12,7 +12,7 @@ class LoadSpreads():
             self.date_param = datetime.today().strftime('%Y-%m-%d')
     
     def get_spreads(self, obj_key):
-        content_object = s3.Object(self.bucket, obj_key)
+        content_object = self.s3.Object(self.bucket, obj_key)
         content = content_object.get()['Body'].read().decode('utf-8')
         spreads_dict = json.loads(content)
         return(spreads_dict)
