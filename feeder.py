@@ -23,7 +23,7 @@ class S3ToStage():
         return(s3_obj_keys)
 
     def get_s3_data(self, s3_obj_key):
-        content_object = self.s3.Object(self.bucket.name, obj_key)
+        content_object = self.s3.Object(self.bucket.name, s3_obj_key)
         content = content_object.get()['Body'].read().decode('utf-8')
         spreads_dict = json.loads(content)
         return(spreads_dict)
