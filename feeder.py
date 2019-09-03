@@ -38,4 +38,4 @@ class S3ToStage():
     def main(self):
         self.find_s3_objs()
         for s3_obj_key in self.s3_obj_keys:
-            self.s3_data.append(s3_data_feed(s3_obj_key))
+            self.s3_data.append(self.s3_data_feed(s3_obj_key))
