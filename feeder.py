@@ -14,7 +14,7 @@ class LoadSpreads():
     def find_objs(self, prefix):
         s3_objs = self.bucket.objects.filter(Prefix=prefix)
         obj_keys = [obj.key for obj in s3_objs]
-        return(obj_keys[0])
+        return(obj_keys)
 
     def get_spreads(self, obj_key):
         content_object = self.s3.Object(self.bucket.name, obj_key)
