@@ -29,10 +29,11 @@ class S3ToStage():
         data_dict = json.loads(content)
         week_id = re.search('week_id=(.+?)/', s3_obj_key).group(1)
         scrape_ts = re.search('/(.+?).json', s3_obj_key).group(1)
-        data_dict.update({
+        metadata = {
             'week_id' : week_id,
             'scrape_ts' : scrape_ts
-        })
+        }
+        data_dict = [game.update(metadata) for game in data_dict]
         return(data_dict)
 
     def main(self):
