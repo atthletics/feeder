@@ -17,8 +17,8 @@ class S3ToStage():
         prefix_path = 'data/{source}/week_id={week_id}/{date_param}'
         self.prefix = prefix_path.format(**self.params)
 
-    def find_obj_keys(self, prefix):
-        self.s3_objs = self.bucket.objects.filter(Prefix=prefix)
+    def find_s3_objs(self):
+        self.s3_objs = self.bucket.objects.filter(Prefix=self.prefix)
         self.s3_obj_keys = [obj.key for obj in self.s3_objs]
         return(self.s3_obj_keys)
 
