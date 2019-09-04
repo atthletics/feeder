@@ -27,11 +27,11 @@ class S3Operators():
         content = content_object.get()['Body'].read().decode('utf-8')
         game_data = json.loads(content)
         scrape_ts = os.path.splitext(s3_obj_key.split('/')[3])[0]
-        scrape_ts = scrape_ts.replace('T', ' ')
-        #scrape_ts_obj = datetime.strptime(scrape_ts, "%Y-%m-%dT%H:%M:%S")
+        #scrape_ts = scrape_ts.replace('T', ' ')
+        scrape_ts_obj = datetime.strptime(scrape_ts, "%Y-%m-%dT%H:%M:%S")
         metadata = {
             'week_id' : self.params['week_id'],
-            'scrape_ts' : scrape_ts
+            'scrape_ts' : scrape_ts_obj
         }
         [game.update(metadata) for game in game_data]
         return(game_data)
