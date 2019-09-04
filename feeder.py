@@ -1,4 +1,4 @@
-import json, re
+import os, json
 from datetime import datetime
 import boto3
 import MySQLdb
@@ -23,14 +23,13 @@ class S3ToStage():
         self.s3_obj_keys = [obj.key for obj in self.s3_objs]
         return(self.s3_obj_keys)
 
-    def s3_data_feed(self, s3_obj_key):
+    def get_s3_data(self, s3_obj_key):
         content_object = self.s3.Object(self.bucket.name, s3_obj_key)
         content = content_object.get()['Body'].read().decode('utf-8')
         data_dict = json.loads(content)
-        week_id = re.search('week_id=(.+?)/', s3_obj_key).group(1)
-        scrape_ts = re.search('/(.+?).json', s3_obj_key).group(1)
+        scrape_ts = os.path.splitext(s3_obj_key.split('/')[3])[0]
         metadata = {
-            'week_id' : week_id,
+            'week_id' : self.params['week_id'],
             'scrape_ts' : scrape_ts
         }
         data_dict = [game.update(metadata) for game in data_dict]
@@ -39,4 +38,4 @@ class S3ToStage():
     def main(self):
         self.find_s3_objs()
         for s3_obj_key in self.s3_obj_keys:
-            self.s3_data.append(self.s3_data_feed(s3_obj_key))
+            self.s3_data.append(self.get_s3_data(s3_obj_key))
