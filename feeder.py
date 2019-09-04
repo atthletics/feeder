@@ -1,9 +1,9 @@
 import os, json
 from datetime import datetime
 import boto3
-import MySQLdb
+#import MySQLdb
 
-class S3ToStage():
+class LoadScrapes():
     def __init__(self, bucket, source, week_id, date_param=None):
         self.s3 = boto3.resource('s3')
         self.bucket = self.s3.Bucket(bucket)
@@ -26,16 +26,34 @@ class S3ToStage():
     def get_s3_data(self, s3_obj_key):
         content_object = self.s3.Object(self.bucket.name, s3_obj_key)
         content = content_object.get()['Body'].read().decode('utf-8')
-        data_dict = json.loads(content)
+        game_data = json.loads(content)
         scrape_ts = os.path.splitext(s3_obj_key.split('/')[3])[0]
+        scrape_ts_obj = datetime.strptime(scrape_ts, "%Y-%m-%dT%H:%M:%S")
         metadata = {
             'week_id' : self.params['week_id'],
-            'scrape_ts' : scrape_ts
+            'scrape_ts' : scrape_ts_obj
         }
-        data_dict = [game.update(metadata) for game in data_dict]
-        return(data_dict)
+        [game.update(metadata) for game in game_data]
+        return(game_data)
 
     def main(self):
         self.find_s3_objs()
         for s3_obj_key in self.s3_obj_keys:
-            self.s3_data.append(self.get_s3_data(s3_obj_key))
+            game_data = self.get_s3_data(s3_obj_key)
+            self.s3_data.append(game_data)
+
+class DictListToMySQL():
+    def __init__(self, game_dicts):
+        self.db = MySQLdb.connect(...)
+        self.cursor = db.cursor()
+        self.game_dicts = game_dicts
+        self.data = [game.values() for game in self.game_dicts]
+        self.columns = list(self.game_dicts[0].keys())
+
+    def run(self, table):
+        self.cursor.executemany(
+        """
+        INSERT INTO foo (name, gender)
+        VALUES (%(name)s, %(gender)s)
+        """, data)
+        db.commit()
