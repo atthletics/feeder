@@ -13,6 +13,7 @@ class DictListToMySQL():
             passwd = db_config['passwd'],
             db = db_config['db'])
         self.cursor = self.db.cursor()
+        self.main()
 
     def generate_insert(self):
         self.columns = list(self.game_dicts[0].keys())
@@ -31,4 +32,4 @@ class DictListToMySQL():
     def main(self):
         self.generate_insert()
         self.cursor.executemany(self.sql, self.data)
-        db.commit()
+        self.db.commit()
