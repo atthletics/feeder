@@ -15,16 +15,16 @@ class DictListToMySQL():
         self.cursor = self.db.cursor()
 
     def generate_insert(self):
-        self.columns = ', '.join(list(self.game_dicts[0].keys()))
+        self.columns = list(self.game_dicts[0].keys())
         self.data = [tuple(game.values()) for game in self.game_dicts]
         n_cols = len(self.columns)
         vals = ', '.join(['%s'] * n_cols)
         sql_params = {
             'table': self.table,
-            'columns': self.columns,
+            'columns': ', '.join(self.columns),
             'vals': vals
         }
-        sql_tmplate = 'INSERT INTO {table} ({columns}) VALUES {vals};'
+        sql_tmplate = 'INSERT INTO {table} ({columns}) VALUES ({vals});'
         self.sql = sql_tmplate.format(**sql_params)
         print(self.sql)
 
