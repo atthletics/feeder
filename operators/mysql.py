@@ -15,7 +15,7 @@ class DictListToMySQL():
         self.cursor = self.db.cursor()
 
     def generate_insert(self):
-        self.columns = list(self.game_dicts[0].keys())
+        self.columns = ', ',join(list(self.game_dicts[0].keys()))
         self.data = [tuple(game.values()) for game in self.game_dicts]
         n_cols = len(self.columns)
         vals = ', '.join(['%s'] * n_cols)
