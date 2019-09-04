@@ -12,7 +12,7 @@ class DictListToMySQL():
             user = db_config['user'],
             passwd = db_config['passwd'],
             db = db_config['db'])
-        self.cursor = db.cursor()
+        self.cursor = self.db.cursor()
 
     def generate_insert(self):
         self.columns = list(self.game_dicts[0].keys())

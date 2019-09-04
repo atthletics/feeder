@@ -2,7 +2,7 @@ import os, json
 from datetime import datetime
 import boto3
 
-class S3Operators():
+class S3ToDictList():
     def __init__(self, bucket, source, week_id, date_param=None):
         self.s3 = boto3.resource('s3')
         self.bucket = self.s3.Bucket(bucket)
@@ -15,7 +15,7 @@ class S3Operators():
         }
         prefix_path = 'data/{source}/week_id={week_id}/{date_param}'
         self.prefix = prefix_path.format(**self.params)
-        self.s3_data = []
+        self.main()
 
     def find_s3_objs(self):
         self.s3_objs = self.bucket.objects.filter(Prefix=self.prefix)
@@ -38,6 +38,7 @@ class S3Operators():
 
     def main(self):
         self.find_s3_objs()
+        self.s3_data = []
         for s3_obj_key in self.s3_obj_keys:
             game_data = self.get_s3_data(s3_obj_key)
             self.s3_data.append(game_data)
