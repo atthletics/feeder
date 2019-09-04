@@ -18,14 +18,14 @@ class DictListToMySQL():
         self.columns = list(self.game_dicts[0].keys())
         self.data = [tuple(game.values()) for game in self.game_dicts]
         n_cols = len(self.columns)
-        vals =  ', '.join(['%s'] * n_cols)
+        vals = ', '.join(['%s'] * n_cols)
         sql_params = {
             'table': table,
             'columns': self.columns,
             'vals': vals
         }
         self.sql = 'INSERT INTO {table} ({columns}) VALUES {vals};'
-        return(self.sql)
+        print(self.sql)
 
     def run(self):
         self.cursor.executemany(self.sql, self.data)

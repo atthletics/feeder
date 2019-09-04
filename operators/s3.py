@@ -36,18 +36,6 @@ class S3Operators():
         [game.update(metadata) for game in game_data]
         return(game_data)
 
-    def generate_insert(self, table, game_data):
-        columns = ", ".join(game_data[0].keys())
-        data = [tuple(game.values()) for game in game_data]
-        sql_params = {
-            'table': table,
-            'columns': columns,
-            'data': data
-        }
-        sql = 'INSERT INTO {table} ({columns}) VALUES {data};'
-        sql = sql.format(**sql_params)
-        return(sql)
-
     def main(self):
         self.find_s3_objs()
         for s3_obj_key in self.s3_obj_keys:
