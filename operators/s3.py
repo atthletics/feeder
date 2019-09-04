@@ -1,9 +1,8 @@
 import os, json
 from datetime import datetime
 import boto3
-#import MySQLdb
 
-class LoadScrapes():
+class S3Operators():
     def __init__(self, bucket, source, week_id, date_param=None):
         self.s3 = boto3.resource('s3')
         self.bucket = self.s3.Bucket(bucket)
@@ -28,32 +27,29 @@ class LoadScrapes():
         content = content_object.get()['Body'].read().decode('utf-8')
         game_data = json.loads(content)
         scrape_ts = os.path.splitext(s3_obj_key.split('/')[3])[0]
-        scrape_ts_obj = datetime.strptime(scrape_ts, "%Y-%m-%dT%H:%M:%S")
+        scrape_ts = scrape_ts.replace('T', ' ')
+        #scrape_ts_obj = datetime.strptime(scrape_ts, "%Y-%m-%dT%H:%M:%S")
         metadata = {
             'week_id' : self.params['week_id'],
-            'scrape_ts' : scrape_ts_obj
+            'scrape_ts' : scrape_ts
         }
         [game.update(metadata) for game in game_data]
         return(game_data)
+
+    def generate_insert(self, table, game_data):
+        columns = ", ".join(game_data[0].keys())
+        data = [tuple(game.values()) for game in game_data]
+        sql_params = {
+            'table': table,
+            'columns': columns,
+            'data': data
+        }
+        sql = 'INSERT INTO {table} ({columns}) VALUES {data};'
+        sql = sql.format(**sql_params)
+        return(sql)
 
     def main(self):
         self.find_s3_objs()
         for s3_obj_key in self.s3_obj_keys:
             game_data = self.get_s3_data(s3_obj_key)
             self.s3_data.append(game_data)
-
-class DictListToMySQL():
-    def __init__(self, game_dicts):
-        self.db = MySQLdb.connect(...)
-        self.cursor = db.cursor()
-        self.game_dicts = game_dicts
-        self.data = [game.values() for game in self.game_dicts]
-        self.columns = list(self.game_dicts[0].keys())
-
-    def run(self, table):
-        self.cursor.executemany(
-        """
-        INSERT INTO foo (name, gender)
-        VALUES (%(name)s, %(gender)s)
-        """, data)
-        db.commit()
