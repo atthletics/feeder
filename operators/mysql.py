@@ -20,17 +20,14 @@ class DictListToMySQL():
         n_cols = len(self.columns)
         vals = ', '.join(['%s'] * n_cols)
         sql_params = {
-            'table': table,
+            'table': self.table,
             'columns': self.columns,
             'vals': vals
         }
         self.sql = 'INSERT INTO {table} ({columns}) VALUES {vals};'
         print(self.sql)
 
-    def run(self):
+    def main(self):
+        self.generate_insert()
         self.cursor.executemany(self.sql, self.data)
         db.commit()
-
-    def main(self):
-        sel.generate_insert()
-        self.run()
