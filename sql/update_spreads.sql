@@ -1,5 +1,5 @@
 UPDATE     ud_spreads s
-INNER JOIN 
+INNER JOIN
 (
     SELECT     g.game_id,
                g.game_ts,
@@ -49,7 +49,7 @@ INNER JOIN
                                    MAX(scrape_ts) scrape_ts
                             FROM   ncaaf_os_scrape s
                             WHERE  s.spread IS NOT NULL
-                            GROUP BY 1
+                            GROUP BY 1,2
                             ) fltr
                             ON s.scrape_ts = fltr.scrape_ts
                             AND t1.os_team_name = fltr.away_team
@@ -64,5 +64,5 @@ INNER JOIN
 ) es_os
 ON s.game_id = es_os.game_id
 SET s.spread = es_os.spread,
-    s.process_ts = es_os.scrape_ts
+    s.create_ts = es_os.scrape_ts
 ;
