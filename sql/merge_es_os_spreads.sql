@@ -20,6 +20,7 @@ LEFT JOIN (
    on s.game_id = g.espn_game_id
    left join teams t
    on s.underdog_id = t.espn_team_id
+   where scrape_ts = (SELECT max(scrape_ts) max_scrape_ts FROM ncaaf_es_scrape)
 ) espn
 on g.game_id = espn.game_id
 LEFT JOIN (
@@ -37,6 +38,7 @@ LEFT JOIN (
    inner join ud_games g
    on t1.atthletics_team_id = g.away_id
    and t2.atthletics_team_id = g.home_id
+   where scrape_ts = (SELECT max(scrape_ts) max_scrape_ts FROM ncaaf_os_scrape)
 ) os
 on g.game_id = os.game_id
 WHERE g.week_id = 2
