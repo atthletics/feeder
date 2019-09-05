@@ -13,23 +13,37 @@ class DictListToMySQL():
             passwd = db_config['passwd'],
             db = db_config['db'])
         self.cursor = self.db.cursor()
-        self.main()
+        #self.main()
+
+    def generate_delete(self):
+        scrape_ts = self.game_dicts[0]['scrape_ts'].strftime("%Y-%m-%d %H:%M:%S")
+        del_sql_tmpl = 'DELETE FROM {table} WHERE scrape_ts = {scrape_ts};'
+        del_params = {
+            'table'     : self.table,
+            'scrape_ts' : scrape_ts
+        }
+        self.del_sql = del_sql_tmpl.format(**del_params)
+        return(self.del_sql)
+
 
     def generate_insert(self):
         self.columns = list(self.game_dicts[0].keys())
         self.data = [tuple(game.values()) for game in self.game_dicts]
         n_cols = len(self.columns)
         vals = ', '.join(['%s'] * n_cols)
-        sql_params = {
+        insert_params = {
             'table': self.table,
             'columns': ', '.join(self.columns),
             'vals': vals
         }
-        sql_tmplate = 'INSERT INTO {table} ({columns}) VALUES ({vals});'
-        self.sql = sql_tmplate.format(**sql_params)
-        print(self.sql)
+        insert_sql_tmpl = 'INSERT INTO {table} ({columns}) VALUES ({vals});'
+        self.insert_sql = sql_tmpl.format(**insert_params)
+        return(self.insert_sql)
 
     def main(self):
+        self.generate_delete()
+        self.cursor.execute(self.del_sql)
+
         self.generate_insert()
         self.cursor.executemany(self.sql, self.data)
         self.db.commit()
