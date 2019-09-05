@@ -13,7 +13,7 @@ class DictListToMySQL():
             passwd = db_config['passwd'],
             db = db_config['db'])
         self.cursor = self.db.cursor()
-        #self.main()
+        self.main()
 
     def generate_delete(self):
         scrape_ts = self.game_dicts[0]['scrape_ts'].strftime("%Y-%m-%d %H:%M:%S")
