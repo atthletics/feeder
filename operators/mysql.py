@@ -36,7 +36,7 @@ class DictListToMySQL():
             'vals': vals
         }
         insert_sql_tmpl = 'INSERT INTO {table} ({columns}) VALUES ({vals});'
-        self.insert_sql = sql_tmpl.format(**insert_params)
+        self.insert_sql = insert_sql_tmpl.format(**insert_params)
         return(self.insert_sql)
 
     def main(self):
