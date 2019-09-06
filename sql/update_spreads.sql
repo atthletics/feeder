@@ -2,7 +2,6 @@ UPDATE     ud_spreads s
 INNER JOIN
 (
     SELECT     g.game_id,
-               g.game_ts,
                CASE WHEN es.team_id IS NULL THEN os.team_id
                     ELSE es.team_id END team_id,
                CASE WHEN es.team_id IS NULL THEN os.spread
@@ -63,6 +62,7 @@ INNER JOIN
     ORDER BY 2
 ) es_os
 ON s.game_id = es_os.game_id
-SET s.spread = es_os.spread,
+SET s.team_id = es_os.team_id,
+    s.spread = es_os.spread,
     s.create_ts = es_os.scrape_ts
 ;
