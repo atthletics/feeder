@@ -15,7 +15,7 @@ if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument("-w", "--week_id",
                         help = "Required Week ID to pull data from S3")
-    parser.add_argument("-d", "date_id",
+    parser.add_argument("-d", "--date_id",
                         help = "Optional Date ID for historic processing",
                         default = None)
     args = parser.parse_args()
