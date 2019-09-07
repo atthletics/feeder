@@ -1,4 +1,4 @@
-UPDATE     ud_spreads s
+UPDATE      ud_spreads s
 INNER JOIN
 (
     SELECT     g.game_id,
@@ -61,8 +61,8 @@ INNER JOIN
     WHERE week_id = 2
     ORDER BY 2
 ) es_os
-ON s.game_id = es_os.game_id
-SET s.team_id = es_os.team_id,
-    s.spread = es_os.spread,
-    s.create_ts = es_os.scrape_ts
+ON          s.game_id = es_os.game_id
+SET         s.team_id = es_os.team_id,
+            s.spread = es_os.spread,
+            s.create_ts = es_os.scrape_ts
 ;
