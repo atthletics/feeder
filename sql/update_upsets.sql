@@ -14,6 +14,8 @@ INNER JOIN
                                    MAX(scrape_ts) scrape_ts
                             FROM   ncaaf_es_scrape s
                             WHERE s.away_score IS NOT NULL
+                            AND   s.home_score IS NOT NULL
+                            AND   s.game_status LIKE '%WIN%'
                             GROUP BY 1
                             ) fltr
                             ON s.scrape_ts = fltr.scrape_ts
@@ -25,7 +27,7 @@ INNER JOIN
     INNER JOIN  ud_spreads sp
                 ON g.game_id = sp.game_id
                 AND win.atthletics_team_id = sp.team_id
-    WHERE g.week_id = 2
+    WHERE g.week_id = 1
 ) ups
 ON          s.game_id = ups.game_id
 SET         s.is_upset = 1,

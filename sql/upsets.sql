@@ -18,6 +18,8 @@ LEFT JOIN  (
                                MAX(scrape_ts) scrape_ts
                         FROM   ncaaf_es_scrape s
                         WHERE s.away_score IS NOT NULL
+                        AND   s.home_score IS NOT NULL
+                        AND   s.game_status LIKE '%WIN%'
                         GROUP BY 1
                         ) fltr
                         ON s.scrape_ts = fltr.scrape_ts
