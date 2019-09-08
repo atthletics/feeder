@@ -35,5 +35,5 @@ LEFT JOIN   teams home
 INNER JOIN  ud_spreads sp
             ON g.game_id = sp.game_id
             AND win.atthletics_team_id = sp.team_id
-WHERE g.week_id = 1
+WHERE g.week_id = 2
 ;
