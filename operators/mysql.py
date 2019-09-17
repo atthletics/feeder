@@ -1,11 +1,18 @@
 import os, yaml
 import MySQLdb
+import logging as log
+log.basicConfig(format='ES | %(asctime)s | %(levelname)s | %(message)s',
+                datefmt='%m/%d/%Y %I:%M:%S %p',
+                level=log.INFO)
 
 class DictListToMySQL():
     def __init__(self, game_dicts, table):
         self.game_dicts = game_dicts
         self.table = table
-        with open('db_config.yaml', 'r') as f:
+        log.info('Loading data to MySQL table: ' + self.table)
+        dir = os.path.dirname(os.path.realpath(__file__))
+        db_config_path = os.path.join(dir, 'db_config.yaml')
+        with open(db_config_path, 'r') as f:
             db_config = yaml.load(f)
         self.db = MySQLdb.connect(
             host = db_config['host'],
@@ -16,7 +23,9 @@ class DictListToMySQL():
         self.main()
 
     def generate_delete(self):
-        scrape_ts = self.game_dicts[0]['scrape_ts'].strftime("%Y-%m-%d %H:%M:%S")
+        scrape_ts_str = self.game_dicts[0]['scrape_ts']
+        scrape_ts = scrape_ts_str.strftime("%Y-%m-%d %H:%M:%S")
+        log.info('Deleting and Loading data Scrape Timestamp: ' + scrape_ts_str)
         del_sql_tmpl = "DELETE FROM {table} WHERE scrape_ts = '{scrape_ts}';"
         del_params = {
             'table'     : self.table,
@@ -27,7 +36,9 @@ class DictListToMySQL():
 
     def generate_insert(self):
         self.columns = list(self.game_dicts[0].keys())
+        log.info('Inserting columns:\n' + self.columns)              
         self.data = [tuple(game.values()) for game in self.game_dicts]
+        log.info('Preparing to load:\n' + self.data)              
         n_cols = len(self.columns)
         vals = ', '.join(['%s'] * n_cols)
         insert_params = {
