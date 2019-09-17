@@ -1,7 +1,7 @@
 import os, yaml
 import MySQLdb
 import logging as log
-log.basicConfig(format='ES | %(asctime)s | %(levelname)s | %(message)s',
+log.basicConfig(format='MySQL | %(asctime)s | %(levelname)s | %(message)s',
                 datefmt='%m/%d/%Y %I:%M:%S %p',
                 level=log.INFO)
 
@@ -10,8 +10,8 @@ class DictListToMySQL():
         self.game_dicts = game_dicts
         self.table = table
         log.info('Loading data to MySQL table: ' + self.table)
-        dir = os.path.dirname(os.path.realpath(__file__))
-        db_config_path = os.path.join(dir, 'db_config.yaml')
+        db_config_path = os.path.abspath(
+            os.path.join(os.path.dirname( __file__ ), '..', 'db_config.yaml'))
         with open(db_config_path, 'r') as f:
             db_config = yaml.load(f)
         self.db = MySQLdb.connect(
