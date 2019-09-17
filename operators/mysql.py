@@ -38,7 +38,7 @@ class DictListToMySQL():
         log.info('Inserting columns')
         print(*self.columns, sep='\n')
         self.data = [tuple(game.values()) for game in self.game_dicts]
-        log.info('Loading Data:\n' + self.data) 
+        log.info('Loading Data:) 
         print(*self.data, sep='\n')
         n_cols = len(self.columns)
         vals = ', '.join(['%s'] * n_cols)
