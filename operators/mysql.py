@@ -35,10 +35,9 @@ class DictListToMySQL():
 
     def generate_insert(self):
         self.columns = list(self.game_dicts[0].keys())
-        print(*self.columns, sep='\n')
         self.data = [tuple(game.values()) for game in self.game_dicts]
         log.info('Loading Data:') 
-        print(', '.join(self.columns))
+        print(*self.columns, sep=', ')
         print(*self.data, sep='\n')
         n_cols = len(self.columns)
         vals = ', '.join(['%s'] * n_cols)
