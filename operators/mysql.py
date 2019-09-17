@@ -23,9 +23,8 @@ class DictListToMySQL():
         self.main()
 
     def generate_delete(self):
-        scrape_ts_str = self.game_dicts[0]['scrape_ts']
-        scrape_ts = scrape_ts_str.strftime("%Y-%m-%d %H:%M:%S")
-        log.info('Deleting and Loading data Scrape Timestamp: ' + scrape_ts_str)
+        scrape_ts = self.game_dicts[0]['scrape_ts'].strftime("%Y-%m-%d %H:%M:%S")
+        log.info('Deleting Data For Scrape Timestamp: ' + scrape_ts)
         del_sql_tmpl = "DELETE FROM {table} WHERE scrape_ts = '{scrape_ts}';"
         del_params = {
             'table'     : self.table,
@@ -38,7 +37,7 @@ class DictListToMySQL():
         self.columns = list(self.game_dicts[0].keys())
         log.info('Inserting columns:\n' + self.columns)              
         self.data = [tuple(game.values()) for game in self.game_dicts]
-        log.info('Preparing to load:\n' + self.data)              
+        log.info('Loading Data:\n' + self.data)              
         n_cols = len(self.columns)
         vals = ', '.join(['%s'] * n_cols)
         insert_params = {
@@ -58,3 +57,4 @@ class DictListToMySQL():
         self.generate_insert()
         self.cursor.executemany(self.insert_sql, self.data)
         self.db.commit()
+        log.info('Done')
